@@ -6,9 +6,9 @@ class Piloto extends Usuario
 {
     private int $horasVuelo;
 
-    public function __construct(string $nombre, string $dni, int $edad, float $salary, int $horasVuelo)
+    public function __construct(string $nombre, string $dni, int $edad, float $salario, string $contraseña, int $horasVuelo)
     {
-        parent::__construct($nombre, $dni, $edad, $salary);
+        parent::__construct($nombre, $dni, $edad, $salario, $contraseña);
         $this->horasVuelo = $horasVuelo;
     }
 

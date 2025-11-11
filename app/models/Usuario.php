@@ -5,14 +5,16 @@ class Usuario
     protected string $nombre;
     protected string $dni;
     protected int $edad;
-    protected float $salary;
+    protected float $salario;
+    protected string $contraseña;
 
-    public function __construct(string $nombre, string $dni, int $edad, float $salary)
+    public function __construct(string $nombre, string $dni, int $edad, float $salario, string $contraseña)
     {
         $this->nombre = $nombre;
         $this->dni = $dni;
         $this->edad = $edad;
-        $this->salary = $salary;
+        $this->salario = $salario;
+        $this->contraseña = $contraseña;
     }
 
     public function getNombre(): string
@@ -50,12 +52,23 @@ class Usuario
 
     public function getSalary(): float
     {
-        return $this->salary;
+        return $this->salario;
     }
 
     public function setSalary(float $salary): self
     {
-        $this->salary = $salary;
+        $this->salario = $salary;
+        return $this;
+    }
+
+    public function getPassword(): string
+    {
+        return $this->contraseña;
+    }
+
+    public function setPassword(string $password): self
+    {
+        $this->contraseña = $password;
         return $this;
     }
 }
