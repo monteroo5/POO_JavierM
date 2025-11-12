@@ -22,4 +22,13 @@ class Piloto extends Usuario
         $this->horasVuelo = $horasVuelo;
         return $this;
     }
+
+    /**
+     * Bonus salarial según las horas de vuelo
+     * @return float|int
+     */
+    public function calcularBonus(): float
+    {
+        return $this->getSalary() + ($this->horasVuelo * 2);
+    }
 }

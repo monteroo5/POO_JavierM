@@ -2,13 +2,15 @@
 require_once "Pasajero.php";
 require_once "Viaje.php";
 
-class Reserva {
+class Reserva
+{
     private int $id;
     private Pasajero $pasajero;
     private Viaje $viaje;
     private string $fecha;
 
-    public function __construct(int $id, Pasajero $pasajero, Viaje $viaje, string $fecha) {
+    public function __construct(int $id, Pasajero $pasajero, Viaje $viaje, string $fecha)
+    {
         $this->id = $id;
         $this->pasajero = $pasajero;
         $this->viaje = $viaje;
@@ -16,36 +18,54 @@ class Reserva {
     }
 
     // Getters
-    public function getId(): int {
+    public function getId(): int
+    {
         return $this->id;
     }
 
-    public function getPasajero(): Pasajero {
+    public function getPasajero(): Pasajero
+    {
         return $this->pasajero;
     }
 
-    public function getViaje(): Viaje {
+    public function getViaje(): Viaje
+    {
         return $this->viaje;
     }
 
-    public function getFecha(): string {
+    public function getFecha(): string
+    {
         return $this->fecha;
     }
 
     // Setters
-    public function setId(int $id): void {
+    public function setId(int $id): void
+    {
         $this->id = $id;
     }
 
-    public function setPasajero(Pasajero $pasajero): void {
+    public function setPasajero(Pasajero $pasajero): void
+    {
         $this->pasajero = $pasajero;
     }
 
-    public function setViaje(Viaje $viaje): void {
+    public function setViaje(Viaje $viaje): void
+    {
         $this->viaje = $viaje;
     }
 
-    public function setFecha(string $fecha): void {
+    public function setFecha(string $fecha): void
+    {
         $this->fecha = $fecha;
     }
+
+    /**
+     * Devuelve el precio que debe pagar el pasajero en esta reserva
+     * @return float
+     */
+    public function calcularPrecio(): float
+    {
+        return $this->pasajero->precioAPagar();
+    }
+
 }

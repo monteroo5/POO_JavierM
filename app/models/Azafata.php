@@ -21,4 +21,25 @@ class Azafata extends Usuario
         $this->idiomas = $idiomas;
         return $this;
     }
+
+    /**
+     * Añade un idioma
+     * @param string $idioma
+     * @return void
+     */
+    public function addIdioma(string $idioma): void
+    {
+        if (!in_array($idioma, $this->idiomas)) {
+            $this->idiomas[] = $idioma;
+        }
+    }
+
+    /**
+     * Añade un bonus salarial según la cantidad de idiomas
+     * @return float|int
+     */
+    public function calcularBonusIdiomas(): float
+    {
+        return $this->getSalary() + (count($this->idiomas) * 10);
+    }
 }

@@ -47,4 +47,23 @@ class Viaje
         $this->pasajeros = $pasajeros;
         return $this;
     }
+
+    /**
+     * Añade un pasajero
+     * @param Pasajero $p
+     * @return void
+     */
+    public function addPasajero(Pasajero $p): void
+    {
+        $this->pasajeros[] = $p;
+    }
+
+    /**
+     * Calcula el precio total del viaje según cantidad de pasajeros
+     * @return float|int
+     */
+    public function calcularPrecioTotal(): float
+    {
+        return $this->precioBase * count($this->pasajeros);
+    }
 }

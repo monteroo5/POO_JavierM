@@ -1,6 +1,6 @@
 <?php
 
-class Usuario
+abstract class Usuario
 {
     protected string $nombre;
     protected string $dni;
@@ -70,5 +70,29 @@ class Usuario
     {
         $this->contraseña = $password;
         return $this;
+    }
+
+    /**
+     * Introducimos nuestra edad actual y la función nos devuelve
+     * los años que nos faltana para jubilarnos.
+     * @param int $edadActual
+     * @return int
+     */
+    public static function añosParaJubilarse(int $edadActual): int
+    {
+        $edadJubilacion = 65;
+        if ($edadActual >= $edadJubilacion) {
+            return 0;
+        }
+        return $edadJubilacion - $edadActual;
+    }
+
+    /**
+     * Calcula el bonus salarial del usuario según la edad de este.
+     * @return float|int
+     */
+    public function calcularBonus(): float
+    {
+        return $this->salario + ($this->edad * 5);
     }
 }
