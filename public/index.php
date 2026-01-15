@@ -1,5 +1,4 @@
 <?php
-
 require_once "../app/models/Usuario.php";
 require_once "../app/models/Pasajero.php";
 require_once "../app/models/Piloto.php";
