@@ -2,19 +2,57 @@
 
 abstract class Usuario
 {
+    protected ?int $id = null;
     protected string $nombre;
     protected string $dni;
     protected int $edad;
     protected float $salario;
-    protected string $contraseña;
+    protected string $email;
+    protected string $password;
 
-    public function __construct(string $nombre, string $dni, int $edad, float $salario, string $contraseña)
+    public function __construct(string $nombre, string $dni, int $edad, float $salario, string $email, string $password)
     {
         $this->nombre = $nombre;
         $this->dni = $dni;
         $this->edad = $edad;
         $this->salario = $salario;
-        $this->contraseña = $contraseña;
+        $this->email = $email;
+        $this->password = $password;
+    }
+
+    /**
+     * Introducimos nuestra edad actual y la función nos devuelve
+     * los años que nos faltana para jubilarnos.
+     * @param int $edadActual
+     * @return int
+     */
+    public static function añosParaJubilarse(int $edadActual): int
+    {
+        $edadJubilacion = 65;
+        if($edadActual >= $edadJubilacion) {
+            return 0;
+        }
+        return $edadJubilacion - $edadActual;
+    }
+
+    /**
+     * Calcula el bonus salarial del usuario según la edad de este.
+     * @return float|int
+     */
+    public function calcularBonus(): float
+    {
+        return $this->salario + ($this->edad * 5);
+    }
+
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    public function setId($id)
+    {
+        $this->id = $id;
+        return $this;
     }
 
     public function getNombre(): string
@@ -39,6 +77,17 @@ abstract class Usuario
         return $this;
     }
 
+    public function getEmail(): string
+    {
+        return $this->email;
+    }
+
+    public function setEmail(string $email): self
+    {
+        $this->email = $email;
+        return $this;
+    }
+
     public function getEdad(): int
     {
         return $this->edad;
@@ -50,49 +99,25 @@ abstract class Usuario
         return $this;
     }
 
-    public function getSalary(): float
+    public function getSalario(): float
     {
         return $this->salario;
     }
 
-    public function setSalary(float $salary): self
+    public function setSalario(float $salario): self
     {
-        $this->salario = $salary;
+        $this->salario = $salario;
         return $this;
     }
 
     public function getPassword(): string
     {
-        return $this->contraseña;
+        return $this->password;
     }
 
     public function setPassword(string $password): self
     {
-        $this->contraseña = $password;
+        $this->password = $password;
         return $this;
-    }
-
-    /**
-     * Introducimos nuestra edad actual y la función nos devuelve
-     * los años que nos faltana para jubilarnos.
-     * @param int $edadActual
-     * @return int
-     */
-    public static function añosParaJubilarse(int $edadActual): int
-    {
-        $edadJubilacion = 65;
-        if ($edadActual >= $edadJubilacion) {
-            return 0;
-        }
-        return $edadJubilacion - $edadActual;
-    }
-
-    /**
-     * Calcula el bonus salarial del usuario según la edad de este.
-     * @return float|int
-     */
-    public function calcularBonus(): float
-    {
-        return $this->salario + ($this->edad * 5);
     }
 }
