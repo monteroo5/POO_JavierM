@@ -16,13 +16,13 @@ class ViajeDAO
         $conn = CoreDB::getConecction();
         $sql = "INSERT INTO viajes (id_pasajero, destino, precio_base) VALUES (?, ?, ?)";
         $ps = $conn->prepare($sql);
-        
+
         $destino = $viaje->getDestino();
         $precio = $viaje->getPrecioBase();
-        
+
         $ps->bind_param("isd", $idPasajero, $destino, $precio);
         $ret = $ps->execute();
-        
+
         $ps->close();
         $conn->close();
         return $ret;
@@ -42,12 +42,12 @@ class ViajeDAO
         $ps->bind_param("i", $idPasajero);
         $ps->execute();
         $result = $ps->get_result();
-        
+
         $viajes = [];
         while ($row = $result->fetch_assoc()) {
             $viajes[] = new Viaje($row["destino"], $row["precio_base"], []);
         }
-        
+
         $ps->close();
         $conn->close();
         return $viajes;
