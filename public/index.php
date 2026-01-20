@@ -1,4 +1,11 @@
 <?php
+session_start();
+if (!isset($_SESSION['usuario']) && !isset($_COOKIE['usuario_web'])) {
+    header("Location: login.php");
+    exit();
+}
+
+
 require_once "../app/models/Usuario.php";
 require_once "../app/models/Pasajero.php";
 require_once "../app/models/Piloto.php";
