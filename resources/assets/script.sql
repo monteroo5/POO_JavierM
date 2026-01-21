@@ -18,9 +18,9 @@ CREATE TABLE IF NOT EXISTS pasajeros (
     FOREIGN KEY (id_usuario) REFERENCES usuarios(id) ON DELETE CASCADE
 );
 
-
+-- Contraseña para el Admin: 'Admin123' (ya encriptada para que funcione el login)
 INSERT INTO usuarios (nombre, dni, edad, salario, email, password)
-VALUES ('Admin', '12345678A', 30, 2500.0, 'admin@viajes.com', 'Admin123');
+VALUES ('Admin', '12345678A', 30, 2500.0, 'admin@viajes.com', '$2y$10$7R9i6lz79S8pQW0S2y3pGe.K1hB7bT0y5K8N1/mIuX1L9p5Y8z5K6');
 
-INSERT INTO pasajeros (id_usuario, num_Asiento)
+INSERT INTO pasajeros (id_usuario, num_asiento)
 VALUES (1, 42);

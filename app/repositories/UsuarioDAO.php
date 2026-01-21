@@ -7,22 +7,23 @@ class UsuarioDAO
 {
     /**
      * Create / insert.
-     * Guarda en la bd un usuario
      * @param Usuario $usuario
-     * @return bool true si lo ha insertado, false si no lo ha insertado.
+     * @return bool
      */
     public static function create($usuario) : bool {
         $conn = CoreDB::getConecction();
         $sql = "INSERT into usuarios (nombre, dni, edad, salario, email, password)
-            VALUES (?, ?, ?, ?, ?, ?)";
+                VALUES (?, ?, ?, ?, ?, ?)";
 
         $ps = $conn->prepare($sql);
+        
         $nombre = $usuario->getNombre();
         $dni = $usuario->getDni();
         $edad = $usuario->getEdad();
         $salario = $usuario->getSalario();
         $email = $usuario->getEmail();
         $passwordHasheada = password_hash($usuario->getPassword(), PASSWORD_DEFAULT);
+        
         $ps->bind_param("ssidss", $nombre, $dni, $edad, $salario, $email, $passwordHasheada);
         
         try {
@@ -31,24 +32,21 @@ class UsuarioDAO
                 $usuario->setId($conn->insert_id);
             }
             $ps->close();
+            return $ret;
         } catch (mysqli_sql_exception $e) {
-            $conn->close();
             return false;
         }
-
-        $conn->close();
-        return $ret;
     }
 
     /**
      * Read / select
-     * Lee un usuario de la bd por su email
      * @param string $email
-     * @return Usuario|null Usuario leído de la bd o null si no existe el email.
+     * @return Usuario|null
      */
-    public static function read($email) : ?Usuario {
+    public static function read(string $email) : ?Usuario {
         $conn = CoreDB::getConecction();
         $sql = "SELECT * FROM usuarios WHERE email = ?";
+        
         $ps = $conn->prepare($sql);
         $ps->bind_param("s", $email);
         $ps->execute();
@@ -56,22 +54,22 @@ class UsuarioDAO
 
         if ($result->num_rows > 0) {
             $row = $result->fetch_assoc();
+            
+            // Creamos el objeto Pasajero con todos sus campos
             $usuario = new Pasajero(
                 $row["nombre"], 
                 $row["dni"], 
-                $row["edad"], 
-                $row["salario"], 
+                (int)$row["edad"], 
+                (float)$row["salario"], 
                 $row["email"], 
                 $row["password"],
-                0
+                0, // numAsiento por defecto
+                [] // array de viajes vacío
             );
-            $usuario->setId($row["id"]);
-        } else {
-            $usuario = null;
+            $usuario->setId((int)$row["id"]);
+            return $usuario;
         }
 
-        $ps->close();
-        $conn->close();
-        return $usuario;
+        return null;
     }
 }

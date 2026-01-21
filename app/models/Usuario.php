@@ -1,6 +1,6 @@
 <?php
 
-abstract class Usuario
+class Usuario
 {
     protected ?int $id = null;
     protected string $nombre;

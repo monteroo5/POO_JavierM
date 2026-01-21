@@ -1,8 +1,8 @@
-<form action="signup.php" method="POST">
-    <label>Nombre: <input type="text" name="nombre" required></label><br>
-    <label>DNI: <input type="text" name="dni" pattern="[0-9]{8}[A-Z]" title="8 números y una letra" required></label><br>
-    <label>Edad: <input type="number" name="edad" min="18" required></label><br>
-    <label>Salario: <input type="number" step="0.01" name="salario" required></label><br>
-    <label>Contraseña: <input type="password" name="password" required></label><br>
-    <button type="submit" name="btn_signup">Crear Usuario</button>
+<form method="POST" action="signup.php">
+    <input type="text" name="nombre" required placeholder="Nombre">
+    <input type="text" name="dni" required placeholder="DNI">
+    <input type="email" name="email" required placeholder="Email">
+    <input type="password" name="password" required placeholder="Contraseña">
+    <input type="password" name="password_confirm" required placeholder="Repite Contraseña">
+    <button type="submit" name="btn_signup">Registrarse</button>
 </form>

@@ -1,9 +1,11 @@
-<form action="index.php" method="POST">
-    <h4>Eliminar Pasajero</h4>
-    <select name="id_pasajero_borrar" required>
-        <option value="">Seleccione un pasajero...</option>
+<form method="POST">
+    <h3>Eliminar Pasajero</h3>
+    <select name="pasajero_id">
+        <option value="">Selecciona uno...</option>
         <?php foreach ($pasajeros as $p): ?>
-            <option value="<?= $p->getDni() ?>"><?= $p->getNombre() ?> (<?= $p->getDni() ?>)</option>
+            <option value="<?php echo $p->getId(); ?>">
+                <?php echo $p->getNombre(); ?> (Asiento: <?php echo $p->getNumAsiento(); ?>)
+            </option>
         <?php endforeach; ?>
     </select>
     <button type="submit" name="btn_delete_pasajero">Eliminar</button>
