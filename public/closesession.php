@@ -1,7 +1,7 @@
 <?php
+//Cierra sesión y redirige a signup.
 session_start();
 session_destroy();
-// Borrar la cookie de "recordar"
-setcookie('usuario_web', '', time() - 3600, "/");
-header("Location: login.php");
-exit();
+header("Location: form-login.php");
+//borro las cookies: le pongo un tiempo pasado
+setcookie("stay-connected", "", time() - 3600, "/");
