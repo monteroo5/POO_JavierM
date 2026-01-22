@@ -1,75 +1,133 @@
 <?php
-require_once __DIR__ . '/../core/CoreDB.php';
 require_once __DIR__ . '/../models/Usuario.php';
-require_once __DIR__ . '/../models/Pasajero.php';
+require_once __DIR__ . '/../core/CoreDB.php';
 
+/**
+ * DAO para la clase Usuario
+ */
 class UsuarioDAO
 {
     /**
-     * Create / insert.
-     * @param Usuario $usuario
-     * @return bool
+     * Crea un nuevo usuario en la base de datos
+     * @param Usuario $usuario Usuario a crear
+     * @return bool True si se creó correctamente
      */
-    public static function create($usuario) : bool {
+    public static function create(Usuario $usuario): bool
+    {
         $conn = CoreDB::getConecction();
-        $sql = "INSERT into usuarios (nombre, dni, edad, salario, email, password)
-                VALUES (?, ?, ?, ?, ?, ?)";
-
-        $ps = $conn->prepare($sql);
+        
+        // Hasheamos la contraseña antes de guardar
+        $passwordHash = password_hash($usuario->getPassword(), PASSWORD_DEFAULT);
+        
+        $stmt = $conn->prepare(
+            "INSERT INTO usuarios (nombre, dni, edad, salario, email, password) 
+             VALUES (?, ?, ?, ?, ?, ?)"
+        );
         
         $nombre = $usuario->getNombre();
         $dni = $usuario->getDni();
         $edad = $usuario->getEdad();
         $salario = $usuario->getSalario();
         $email = $usuario->getEmail();
-        $passwordHasheada = password_hash($usuario->getPassword(), PASSWORD_DEFAULT);
         
-        $ps->bind_param("ssidss", $nombre, $dni, $edad, $salario, $email, $passwordHasheada);
+        $stmt->bind_param("ssiiss", $nombre, $dni, $edad, $salario, $email, $passwordHash);
+        $result = $stmt->execute();
         
-        try {
-            $ret = $ps->execute();
-            if ($ret) {
-                $usuario->setId($conn->insert_id);
-            }
-            $ps->close();
-            return $ret;
-        } catch (mysqli_sql_exception $e) {
-            return false;
+        if ($result) {
+            // Actualizamos el ID del usuario con el autogenerado
+            $usuario->setId($conn->insert_id);
         }
+        
+        $stmt->close();
+        $conn->close();
+        
+        return $result;
     }
 
     /**
-     * Read / select
-     * @param string $email
-     * @return Usuario|null
+     * Lee un usuario por su email
+     * @param string $email Email del usuario
+     * @return Usuario|null Usuario encontrado o null
      */
-    public static function read(string $email) : ?Usuario {
+    public static function read(string $email): ?Usuario
+    {
         $conn = CoreDB::getConecction();
-        $sql = "SELECT * FROM usuarios WHERE email = ?";
+        $stmt = $conn->prepare("SELECT * FROM usuarios WHERE email = ?");
+        $stmt->bind_param("s", $email);
+        $stmt->execute();
+        $result = $stmt->get_result();
         
-        $ps = $conn->prepare($sql);
-        $ps->bind_param("s", $email);
-        $ps->execute();
-        $result = $ps->get_result();
-
-        if ($result->num_rows > 0) {
-            $row = $result->fetch_assoc();
-            
-            // Creamos el objeto Pasajero con todos sus campos
-            $usuario = new Pasajero(
-                $row["nombre"], 
-                $row["dni"], 
-                (int)$row["edad"], 
-                (float)$row["salario"], 
-                $row["email"], 
-                $row["password"],
-                0, // numAsiento por defecto
-                [] // array de viajes vacío
+        $usuario = null;
+        if ($row = $result->fetch_assoc()) {
+            $usuario = new Usuario(
+                $row['nombre'],
+                $row['dni'],
+                $row['edad'],
+                $row['salario'],
+                $row['email'],
+                $row['password'],
             );
-            $usuario->setId((int)$row["id"]);
-            return $usuario;
         }
+        
+        $stmt->close();
+        $conn->close();
+        
+        return $usuario;
+    }
 
-        return null;
+    /**
+     * Lee un usuario por su ID
+     * @param int $id ID del usuario
+     * @return Usuario|null Usuario encontrado o null
+     */
+    public static function readById(int $id): ?Usuario
+    {
+        $conn = CoreDB::getConecction();
+        $stmt = $conn->prepare("SELECT * FROM usuarios WHERE id = ?");
+        $stmt->bind_param("i", $id);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        
+        $usuario = null;
+        if ($row = $result->fetch_assoc()) {
+            $usuario = new Usuario(
+                $row['nombre'],
+                $row['dni'],
+                $row['edad'],
+                $row['salario'],
+                $row['email'],
+                $row['password'],
+            );
+        }
+        
+        $stmt->close();
+        $conn->close();
+        
+        return $usuario;
+    }
+
+    /**
+     * Obtiene todos los usuarios
+     * @return array Array de usuarios
+     */
+    public static function getAll(): array
+    {
+        $conn = CoreDB::getConecction();
+        $result = $conn->query("SELECT * FROM usuarios");
+        
+        $usuarios = [];
+        while ($row = $result->fetch_assoc()) {
+            $usuarios[] = new Usuario(
+                $row['nombre'],
+                $row['dni'],
+                $row['edad'],
+                $row['salario'],
+                $row['email'],
+                $row['password'],
+            );
+        }
+        
+        $conn->close();
+        return $usuarios;
     }
 }

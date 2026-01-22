@@ -1,7 +1,10 @@
 <?php
-//Cierra sesión y redirige a signup.
+// Cierra sesión y redirige a login
 session_start();
 session_destroy();
-header("Location: form-login.php");
-//borro las cookies: le pongo un tiempo pasado
+
+// Borrar la cookie: poner un tiempo pasado
 setcookie("stay-connected", "", time() - 3600, "/");
+
+header("Location: login.php");
+exit();

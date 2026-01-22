@@ -1,31 +1,34 @@
-<?php
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btn_create_pasajero'])) {
-    $nombre = trim($_POST['nombre']);
-    $dni = strtoupper(trim($_POST['dni']));
-    $email = strtolower(trim($_POST['email']));
-    $asiento = (int)$_POST['num_asiento'];
-
-    if (empty($nombre) || empty($dni) || empty($email)) {
-        $mensaje = "Rellena todos los campos.";
-    } elseif (strlen($dni) != 9) {
-        $mensaje = "DNI incorrecto.";
-    } elseif (strpos($email, '@') === false) { // strpos busca la @, si no la halla devuelve false
-        $mensaje = "Email no válido.";
-    } else {
-        $p = new Pasajero($nombre, $dni, 18, 0, $email, "123456", $asiento);
-        if (PasajeroDAO::create($p)) {
-            $_SESSION['mensaje_exito'] = "Pasajero creado.";
-            header("Location: index.php");
-            exit();
-        }
-    }
-}
-?>
-<form method="POST">
-    <h3>Nuevo Pasajero</h3>
-    <input type="text" name="nombre" placeholder="Nombre" required>
-    <input type="text" name="dni" placeholder="DNI" required>
-    <input type="email" name="email" placeholder="Email" required>
-    <input type="number" name="num_asiento" placeholder="Nº Asiento" required>
-    <button type="submit" name="btn_create_pasajero">Guardar</button>
+<form method="POST" action="index.php">
+    <h3>Crear Nuevo Pasajero</h3>
+    
+    <div class="form-group">
+        <label for="nombre">Nombre:</label>
+        <input type="text" id="nombre" name="nombre" required 
+               placeholder="Nombre completo" 
+               minlength="3">
+    </div>
+    
+    <div class="form-group">
+        <label for="dni">DNI:</label>
+        <input type="text" id="dni" name="dni" required 
+               placeholder="12345678A" 
+               pattern="[0-9]{8}[A-Za-z]{1}" 
+               title="8 números seguidos de una letra"
+               maxlength="9">
+    </div>
+    
+    <div class="form-group">
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required 
+               placeholder="pasajero@correo.com">
+    </div>
+    
+    <div class="form-group">
+        <label for="num_asiento">Número de Asiento:</label>
+        <input type="number" id="num_asiento" name="num_asiento" required 
+               min="1" max="300" 
+               placeholder="Ej: 42">
+    </div>
+    
+    <button type="submit" name="btn_create_pasajero">Guardar Pasajero</button>
 </form>
